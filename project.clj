@@ -36,6 +36,12 @@
               :compiler {:output-to "resources/public/js/compiled/xapi_schema_demo.js"
                          :main xapi-schema-demo.core
                          :optimizations :advanced
+                         :pretty-print false}}
+             {:id "gh-pages"
+              :source-paths ["src"]
+              :compiler {:output-to "assets/js/xapi_schema_demo.js"
+                         :main xapi-schema-demo.core
+                         :optimizations :advanced
                          :pretty-print false}}]}
 
   :figwheel {
