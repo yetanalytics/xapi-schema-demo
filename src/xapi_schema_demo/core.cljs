@@ -57,11 +57,6 @@
   [:div.form-group
    [:textarea.form-control {:field :textarea :id :statement-input :rows "25"}]])
 
-(deftype SchemaErrorStr [error-str]
-  Object
-  (to-str [_]
-    error-str))
-
 (defn process-input
   [kp val doc]
   (when (= kp [:statement-input])
@@ -72,13 +67,7 @@
               [nil e]))
 
           validation-err (when-let [e (xs/statement-checker statement)]
-                           (clojure.walk/postwalk
-                            (fn [node]
-                              (if (and (string? node)
-                                       (re-matches #"^(Missing|Not).*" node))
-                                (SchemaErrorStr. node)
-                                node))
-                            (xs/errors->data e)))
+                                 (xs/errors->data e))
           err (or parse-err
                   validation-err)]
       (cond-> doc
@@ -91,6 +80,9 @@
 (defn demo []
   (let [{:keys [statement error]} @app-state]
     [:div.container-fluid
+     [:div.jumbotron
+      [:h2 "xAPI Statement Validator"]
+      [:p "Enter JSON statements in the text area. The statement will be validated and any errors will be displayed."]]
      [:div.row
       [:div.col-md-6
        [:div.panel
@@ -100,20 +92,24 @@
           app-state
           process-input]]]]
       [:div.col-md-6
-       [:div.panel
-        [:div.panel-body
-         (if (and error (instance? js/SyntaxError error))
+       (if (and error (instance? js/SyntaxError error))
+         [:div.panel
+          [:div.panel-heading
+           [:h4.panel-title "Syntax Error:"]]
+          [:div.panel-body.bg-danger
+          (str error)]]
+         (if error
            [:div.panel
+            [:div.panel-heading
+             [:h4.panel-title "Validation Error:"]]
             [:div.panel-body.bg-danger
-             (str error)]]
-           (js-html/edn->hiccup
-            (cond
-              (not error) statement
-              (map? error) (merge statement error)
-              (instance? SchemaErrorStr error) (.to-str error))
-            {SchemaErrorStr (fn [err]
-                              [:span.js-type-string.bg-danger
-                               (.to-str err)])}))]]]]]))
+             (js-html/edn->hiccup error)]]
+           [:div.panel
+            [:div.panel-heading
+             [:h4.panel-title "Valid Statement:"]]
+            [:div.panel-body
+            (js-html/edn->hiccup statement)]])
+         )]]]))
 
 (r/render [demo] (.getElementById js/document "app"))
 
