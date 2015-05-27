@@ -1,2 +1,10 @@
 /* some style */
 
+.demo-nav {
+  background-color: #009688 !important;
+  border-color: #009688 !important;
+}
+
+a.yet-brand {
+  color: white !important;
+}
