@@ -9,7 +9,7 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [reagent "0.5.0"]
                  [reagent-forms "0.5.1"]
-                 [com.yetanalytics/xapi-schema "0.1.2"]
+                 [com.yetanalytics/xapi-schema "0.1.3"]
                  [com.yetanalytics/json-html "0.2.9-SNAPSHOT"]
                  [org.clojure/core.match "0.3.0-alpha4"]]
 
