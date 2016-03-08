@@ -4,17 +4,15 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3211"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [reagent "0.5.0"]
-                 [reagent-forms "0.5.1"]
-                 [com.yetanalytics/xapi-schema "0.1.3"]
-                 [com.yetanalytics/json-html "0.2.9-SNAPSHOT"]
-                 [org.clojure/core.match "0.3.0-alpha4"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.7.228"]
+                 [reagent "0.5.1"]
+                 [reagent-forms "0.5.21"]
+                 [com.yetanalytics/xapi-schema "0.1.8"]
+                 [com.yetanalytics/json-html "0.2.9-SNAPSHOT"]]
 
-  :plugins [[lein-cljsbuild "1.0.5"]
-            [lein-figwheel "0.3.1"]]
+  :plugins [[lein-cljsbuild "1.1.3" :exclusions [[org.clojure/clojure]]]
+            [lein-figwheel "0.5.0-6"]]
 
   :source-paths ["src"]
 

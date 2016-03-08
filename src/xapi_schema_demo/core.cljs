@@ -3,8 +3,7 @@
      [reagent.core :as r :refer [atom]]
      [xapi-schema.core :as xs]
      [reagent-forms.core :refer [bind-fields]]
-     [json-html.core :as js-html]
-     [cljs.core.match :refer-macros [match]]))
+     [json-html.core :as js-html]))
 
 (enable-console-print!)
 
