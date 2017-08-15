@@ -5,14 +5,14 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.7.228"]
+                 [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.5.1"]
                  [reagent-forms "0.5.21"]
-                 [com.yetanalytics/xapi-schema "0.1.8"]
+                 [com.yetanalytics/xapi-schema "0.1.15"]
                  [com.yetanalytics/json-html "0.2.9-SNAPSHOT"]]
 
   :plugins [[lein-cljsbuild "1.1.3" :exclusions [[org.clojure/clojure]]]
-            [lein-figwheel "0.5.0-6"]]
+            [lein-figwheel "0.5.12"]]
 
   :source-paths ["src"]
 
@@ -34,6 +34,7 @@
               :compiler {:output-to "resources/public/js/compiled/xapi_schema_demo.js"
                          :main xapi-schema-demo.core
                          :optimizations :advanced
+                         :output-dir "resources/public/js/compiled/out_min"
                          :pretty-print false}}
              {:id "gh-pages"
               :source-paths ["src"]
