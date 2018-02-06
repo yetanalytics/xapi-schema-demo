@@ -8,3 +8,12 @@
 a.yet-brand {
   color: white !important;
 }
+
+textarea.statement-input {
+  width: 100%;
+  min-height: 500px;
+}
+
+pre.statement {
+  min-height: 500px;
+}
