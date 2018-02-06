@@ -2,8 +2,8 @@
     (:require
      [reagent.core :as r :refer [atom]]
      [xapi-schema.core :as xs]
-     [reagent-forms.core :refer [bind-fields]]
-     [json-html.core :as js-html]))
+     [cljs.pprint :refer [pprint]]
+     [clojure.string :as cs]))
 
 (enable-console-print!)
 
@@ -52,28 +52,30 @@
 (defonce app-state (atom {:statement-input simple-statement-str
                           :statement simple-statement-edn}))
 
+(defonce input-cursor
+  (r/cursor app-state [:statement-input]))
+
 (defonce form-template
   [:div.form-group
    [:textarea.form-control {:field :textarea :id :statement-input :rows "25"}]])
 
 (defn process-input
-  [kp val doc]
-  (when (= kp [:statement-input])
-    (let [[statement parse-err]
-          (try
-            [(js->clj (.parse js/JSON (clojure.string/replace val #"\n" ""))) nil]
-            (catch js/SyntaxError e
-              [nil e]))
+  [doc val]
+  (let [[statement parse-err]
+        (try
+          [(js->clj (.parse js/JSON (cs/replace val #"\n" ""))) nil]
+          (catch js/SyntaxError e
+            [nil e]))
 
-          validation-err (when-let [e (xs/statement-checker statement)]
-                                 (xs/errors->data e))
-          err (or parse-err
-                  validation-err)]
-      (cond-> doc
-        err (assoc :error err)
-        (and statement (nil? err))
-        (assoc :statement statement
-               :error nil)))))
+        validation-err (when-let [e (xs/statement-checker statement)]
+                         e)
+        err (or parse-err
+                validation-err)]
+    (cond-> (assoc doc :statement-input val)
+      err (assoc :error err)
+      (and statement (nil? err))
+      (assoc :statement statement
+             :error nil))))
 
 
 (defn demo []
@@ -86,10 +88,10 @@
       [:div.col-md-6
        [:div.panel
         [:div.panel-body
-         [bind-fields
-          form-template
-          app-state
-          process-input]]]]
+         [:textarea.statement-input
+          {;; :rows "30"
+           :value @input-cursor
+           :on-change #(swap! app-state process-input (-> % .-target .-value))}]]]]
       [:div.col-md-6
        (if (and error (instance? js/SyntaxError error))
          [:div.panel
@@ -102,12 +104,16 @@
             [:div.panel-heading
              [:h4.panel-title "Validation Error:"]]
             [:div.panel-body.bg-danger
-             (js-html/edn->hiccup error)]]
+             [:pre.error
+              (with-out-str
+                (pprint error))]]]
            [:div.panel
             [:div.panel-heading
              [:h4.panel-title "Valid Statement:"]]
             [:div.panel-body
-            (js-html/edn->hiccup statement)]])
+             [:pre.statement
+              (with-out-str
+                (pprint statement))]]])
          )]]]))
 
 (r/render [demo] (.getElementById js/document "app"))
