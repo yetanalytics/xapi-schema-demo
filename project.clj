@@ -7,7 +7,8 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.9.946"]
                  [reagent "0.8.0-alpha2"]
-                 [com.yetanalytics/xapi-schema "1.0.0-alpha2"]]
+                 [com.yetanalytics/xapi-schema "1.0.0-alpha2"]
+                 [org.clojure/test.check "0.10.0-alpha2"]]
 
   :plugins [[lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]
             [lein-figwheel "0.5.14"]]

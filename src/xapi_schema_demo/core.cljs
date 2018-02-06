@@ -3,10 +3,19 @@
      [reagent.core :as r :refer [atom]]
      [xapi-schema.core :as xs]
      [cljs.pprint :refer [pprint]]
-     [clojure.string :as cs]))
+     [clojure.string :as cs]
+     [xapi-schema.spec :as xapispec]
+     [clojure.spec.alpha :as s :include-macros true]
+     [clojure.spec.gen.alpha :as sgen :include-macros true]
+     clojure.test.check.generators))
 
 (enable-console-print!)
 
+(defn gen-statement-json-str []
+  (.stringify js/JSON
+              (clj->js (sgen/generate (s/gen ::xapispec/statement)))
+              nil
+              4))
 
 (def simple-statement-str
   "{
@@ -72,6 +81,7 @@
              :error nil))))
 
 
+
 (defn demo []
   (let [{:keys [statement error]} @app-state]
     [:div.container-fluid
@@ -82,6 +92,7 @@
       [:div.col-md-6
        [:div.panel
         [:div.panel-body
+         [:button.btn.btn-primary {:type "button" :on-click #(swap! app-state process-input (gen-statement-json-str))} "Generate Random Statement"]
          [:textarea.statement-input
           {;; :rows "30"
            :value @input-cursor
