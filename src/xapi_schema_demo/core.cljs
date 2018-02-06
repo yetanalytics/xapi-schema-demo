@@ -37,17 +37,11 @@
     }
 }")
 
+(defn parse-json-str [json-str]
+  (js->clj (.parse js/JSON (cs/replace json-str #"\n\s*" " "))))
+
 (def simple-statement-edn
-  {"id" "fd41c918-b88b-4b20-a0a5-a4c32391aaa0",
-   "actor" {"objectType" "Agent"
-            "name" "Project Tin Can API"
-            "mbox" "mailto:user@example.com"}
-   "verb" {"id" "http://example.com/xapi/verbs#sent-a-statement",
-           "display" {"en-US" "sent"}}
-   "object" {"id" "http://example.com/xapi/activity/simplestatement",
-             "definition"
-             {"name" {"en-US" "simple statement"}
-              "description" {"en-US" "A simple Experience API statement. Note that the LRS does not need to have any prior information about the Actor (learner), the verb, or the Activity/object."}}}})
+  (parse-json-str simple-statement-str))
 
 (defonce app-state (atom {:statement-input simple-statement-str
                           :statement simple-statement-edn}))
@@ -63,7 +57,7 @@
   [doc val]
   (let [[statement parse-err]
         (try
-          [(js->clj (.parse js/JSON (cs/replace val #"\n" ""))) nil]
+          [(parse-json-str val) nil]
           (catch js/SyntaxError e
             [nil e]))
 
